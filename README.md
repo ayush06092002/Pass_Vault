@@ -1,5 +1,5 @@
-
 <img src = "https://github.com/ayush06092002/Pass_Vault/assets/22142132/44b2ddd5-abad-42b0-af14-1c770b591cb9" width="250" height="250" />
+<br>
 # PassVault - Password Manager
 
 PassVault is a secure and user-friendly password manager application built with Jetpack Compose, Hilt for dependency injection, Room for database management, and ViewModel for state management. The application allows users to securely store and manage their passwords.
@@ -77,5 +77,6 @@ object EncryptionHelper {
 
 ### Add New Account
 <img src = "https://github.com/ayush06092002/Pass_Vault/assets/22142132/47be47ef-7489-4a0a-a937-8b8fb29a87a3" width="250" height="555.56" />
+<br>
 ### Account Details
 <img src = "https://github.com/ayush06092002/Pass_Vault/assets/22142132/19e73d95-79ff-482a-ae6d-4a0539938131" width="250" height="555.56" />
