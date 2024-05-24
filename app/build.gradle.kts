@@ -64,6 +64,7 @@ dependencies {
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.51")
+    implementation(libs.androidx.constraintlayout.compose)
     kapt("com.google.dagger:hilt-android-compiler:2.51")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.hilt:hilt-navigation:1.2.0")
@@ -85,6 +86,14 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
 
+    //for Bottom Sheet
+    // Import the Compose BOM
+    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
+
+    // Import Material Design 3 library
+    implementation("androidx.compose.material3:material3:1.2.1")
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -92,4 +101,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
 }
