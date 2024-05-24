@@ -1,7 +1,7 @@
 package com.who.passvault.data
 
+import EncryptionHelper
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.who.passvault.models.Password
 import com.who.passvault.repository.PasswordRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

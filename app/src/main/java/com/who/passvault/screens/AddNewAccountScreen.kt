@@ -1,5 +1,6 @@
 package com.who.passvault.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -54,8 +57,10 @@ fun AddNewAccountScreen(
         TextField(
             value = accountType,
             onValueChange = { accountType = it },
-            label = { Text("Account Type") },
+            label = { Text("Account Name") },
             colors = TextFieldDefaults.colors(
+                unfocusedTextColor = Color.Black,
+                focusedTextColor = Color.Black,
                 unfocusedContainerColor = Color.White,
                 focusedContainerColor = Color.White
             )
@@ -66,6 +71,8 @@ fun AddNewAccountScreen(
             onValueChange = { username = it },
             label = { Text("Username/Email")},
             colors = TextFieldDefaults.colors(
+                unfocusedTextColor = Color.Black,
+                focusedTextColor = Color.Black,
                 unfocusedContainerColor = Color.White,
                 focusedContainerColor = Color.White
             )
@@ -82,18 +89,29 @@ fun AddNewAccountScreen(
                 else R.drawable.passwordshow
 
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(painter = painterResource(id = image), contentDescription = "Password Visibility")
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(id = image),
+                        contentDescription = "Password Visibility"
+                    )
                 }
             },
             colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.White,
-                unfocusedIndicatorColor = Color.White
+                unfocusedTextColor = Color.Black,
+                focusedTextColor = Color.Black,
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
             )
         )
         Spacer(modifier = Modifier.height(16.dp))
+        var context = LocalContext.current
         Row {
             Button(modifier = Modifier.width(250.dp),
                 onClick = {
+                    if(accountType.isEmpty() || username.isEmpty() || password.isEmpty()){
+                        Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
                     viewModel.addPassword(accountType, username, password)
                     onCancel()
                 },

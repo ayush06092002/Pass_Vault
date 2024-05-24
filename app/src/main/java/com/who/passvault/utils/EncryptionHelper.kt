@@ -1,7 +1,7 @@
+import android.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
-import android.util.Base64
 
 object EncryptionHelper {
     private const val ALGORITHM = "AES"

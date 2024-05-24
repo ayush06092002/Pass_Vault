@@ -93,6 +93,9 @@ dependencies {
     // Import Material Design 3 library
     implementation("androidx.compose.material3:material3:1.2.1")
 
+    //Biomertic
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
