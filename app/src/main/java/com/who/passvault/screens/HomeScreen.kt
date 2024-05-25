@@ -51,7 +51,7 @@ fun HomeScreen(){
         mutableStateOf(false)
     }
     val viewModel = hiltViewModel<PasswordViewModel>()
-    Scaffold(modifier = Modifier.padding(16.dp),
+    Scaffold(modifier = Modifier.padding(top = 55.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
         containerColor = Color.Transparent,
         topBar = {
             Text(
