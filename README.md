@@ -12,6 +12,7 @@ PassVault is a secure and user-friendly password manager application built with 
 - **Biometric Authentication**: Secure access to the app using biometric authentication.
 - **Encryption**: Strong encryption algorithms (AES) to secure password data.
 - **Input Validation**: Ensures that mandatory fields are not empty.
+- **Random Strong Password Generation**: Can generate a strong 12 characters long Random Password.
 
 ## Technologies Used
 
