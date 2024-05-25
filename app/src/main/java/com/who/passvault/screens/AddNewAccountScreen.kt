@@ -1,6 +1,7 @@
 package com.who.passvault.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.who.passvault.R
 import com.who.passvault.data.PasswordViewModel
+import java.security.SecureRandom
 
 
 @Composable
@@ -78,30 +81,9 @@ fun AddNewAccountScreen(
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val image = if (passwordVisible)
-                    R.drawable.passwordhide
-                else R.drawable.passwordshow
-
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = image),
-                        contentDescription = "Password Visibility"
-                    )
-                }
-            },
-            colors = TextFieldDefaults.colors(
-                unfocusedTextColor = Color.Black,
-                focusedTextColor = Color.Black,
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White
-            )
+        PasswordTextField(
+            password = password,
+            onPasswordChange = { password = it }
         )
         Spacer(modifier = Modifier.height(16.dp))
         var context = LocalContext.current
@@ -123,3 +105,70 @@ fun AddNewAccountScreen(
         }
     }
 }
+
+@Composable
+fun PasswordTextField(
+    password: String,
+    onPasswordChange: (String) -> Unit
+) {
+    var passwordVisible by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(true) }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Generate Random Password") },
+            text = { Text("Do you want to generate a random strong password?") },
+            confirmButton = {
+                Button(onClick = {
+                    val newPassword = generateRandomPassword()
+                    onPasswordChange(newPassword)
+                    showDialog = false
+                }) {
+                    Text("Yes")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("No")
+                }
+            }
+        )
+    }
+
+    TextField(
+        value = password,
+        onValueChange = { onPasswordChange(it) },
+        label = { Text("Password") },
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            val image = if (passwordVisible)
+                R.drawable.passwordhide
+            else R.drawable.passwordshow
+
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(id = image),
+                    contentDescription = "Password Visibility"
+                )
+            }
+        },
+        colors = TextFieldDefaults.colors(
+            unfocusedTextColor = Color.Black,
+            focusedTextColor = Color.Black,
+            unfocusedContainerColor = Color.White,
+            focusedContainerColor = Color.White
+        )
+    )
+}
+
+fun generateRandomPassword(length: Int = 12): String {
+    val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&*()_-+=<>?"
+    val random = SecureRandom()
+    return (1..length)
+        .map { chars[random.nextInt(chars.length)] }
+        .joinToString("")
+}
+
+
