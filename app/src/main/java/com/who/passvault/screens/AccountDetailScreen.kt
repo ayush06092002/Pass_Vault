@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,8 +37,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.who.passvault.MainActivity
 import com.who.passvault.R
 import com.who.passvault.models.Password
+import com.who.passvault.utils.BiometricPromptManager
 
 @Composable
 fun AccountDetailsScreen(
@@ -45,11 +49,16 @@ fun AccountDetailsScreen(
     onDelete: () -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
+    val activity = LocalContext.current as MainActivity
+    val promptManager by lazy {
+        BiometricPromptManager(activity)
+    }
     val decryptedPassword = EncryptionHelper.decrypt(password.password)
     var accountType by remember { mutableStateOf(password.accountType) }
     var username by remember { mutableStateOf(password.username) }
     var passwordValue by remember { mutableStateOf(decryptedPassword) }
     var passwordVisible by remember { mutableStateOf(false) }
+    var unlockedOnce by remember { mutableStateOf(false) }
     Log.d("AccountDetailsScreen", "AccountDetailsScreen: $decryptedPassword")
     Text(
         modifier = Modifier.padding(start = 24.dp),
@@ -91,6 +100,17 @@ fun AccountDetailsScreen(
             textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         )
         Spacer(modifier = Modifier.height(8.dp))
+        val biometricResult by promptManager.promptResult.collectAsState(
+            initial = null
+        )
+        LaunchedEffect(biometricResult) {
+            if (biometricResult is BiometricPromptManager.BiometricResult.AuthenticationSuccess) {
+                passwordVisible = !passwordVisible
+                unlockedOnce = true
+            }else if(biometricResult != null){
+                Toast.makeText(activity, "Authentication failed", Toast.LENGTH_SHORT).show()
+            }
+        }
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = passwordValue,
@@ -102,7 +122,17 @@ fun AccountDetailsScreen(
                     R.drawable.passwordhide
                 else R.drawable.passwordshow
 
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                IconButton(onClick = {
+                    if(!unlockedOnce) {
+                        promptManager.showBiometricPrompt(
+                            title = "Authenticate",
+                            description = "Please authenticate to continue"
+                        )
+                    }
+                    else{
+                        passwordVisible = !passwordVisible
+                    }
+                }) {
                     Icon(
                         modifier = Modifier.size(24.dp),
                         painter = painterResource(id = image),
